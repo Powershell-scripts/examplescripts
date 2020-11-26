@@ -34,10 +34,13 @@ function  Get-ADUserData {
     .EXAMPLE
     Get-ADUserData -UserName adm*
     Вернет всех пользователей, которые начинаются с adm
+
+    .NOTES
+     Author: @Chentsov_VS
 #>
     param ($UserName = (Read-Host ''))
 
-    # К сожалению тип 
+    
     # фильтруем данные на наличие кириллицы
     $RusLang = $UserName -match '[а-я]{1,99}'
         
@@ -48,9 +51,10 @@ function  Get-ADUserData {
     else {
         $SearchParametr = "SamAccountName"
     }
-        
-    $UserData = Get-ADUser -Filter 'name -like "*"' `
+    
+    # Запрашиваем данные из AD 
+    $UserData = Get-ADUser -Filter 'name -like "*"' -property * `
     | Where-Object { $_.$SearchParametr -eq "$UserName" } 
- 
+
     return $UserData
 }
