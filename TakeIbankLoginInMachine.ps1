@@ -1,8 +1,8 @@
 $CashPCs = Get-ADComputer -Filter 'name -like "*CASH1*"'
 
 Invoke-Command -ComputerName $CashPCs.name -ScriptBlock {
-    # Введение нужных переменных. Заменить только $UserName на имя УЗ в домене
-    # И заменить UserAuthPaysPassword и $UserAuthPaysLogin на нужный логин и пароль
+    # Введение нужных переменных. Заменить только DomainLogin на имя УЗ в домене
+    # И заменить Pass и Login на нужный логин и пароль
     $UserName = "DomainLogin"
     $UserAuthPaysLogin = "Login"
     $UserAuthPaysPassword = "Pass"    
