@@ -20,3 +20,4 @@ $Log = Get-MessageTrackingLog -Start $Date -End (Get-Date) -Server ex0 -Recipien
 $Log
 
 
+# Set-Mailbox $Help.mail -ForwardingAddress $null # отключение переадресации 
