@@ -1,7 +1,7 @@
 
 # Функция генерации пароля без спецсимволов
 function GeneratePass
-    ($long=10) { # $long = длинна пароля 
+    ($long=12) { # $long = длинна пароля 
 
 $PassNumber | ForEach-Object -process {
         $PassResult = -join (1..$long | % { [char[]]'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789' | Get-Random })
