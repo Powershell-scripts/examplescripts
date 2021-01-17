@@ -22,3 +22,8 @@
 9. TakeIbankLoginMachine - Пример простого скрипта, как данные можно передать на все машины, на которых работал пользователь. Данные сохраняются в файлах на рабочем столе у сотрудника. Измини только     $UserName = "DomainLogin", $UserAuthPaysLogin = "Login", $UserAuthPaysPassword = "Pass" 
 10. ForwardingEmailOtherDomain - Пример настройки переадресации на внедоменный почтовый ящик 
 11. ForwardingEmailInDomain - Пример настройки переадресации на доменный почтовый ящик.
+12. EditProfileReestr - Скрипт автоматической подмены профиля, при ошибке служб профилей у пользователя. { 
+	Как пользоваться:
+		12.1. Меняем имя ПК на наше (Enter-PSSession -ComputerName ILC-PVL-GHR1)
+		12.2. Выделяем эту команду и нажимаем F8
+		12.3. Выделяем все остальное кроме подключения (Enter-PSSession -ComputerName ILC-PVL-GHR1) и нажимаем F8}
