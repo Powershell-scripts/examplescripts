@@ -15,7 +15,7 @@ foreach ($Fullname in $GitFullname) {
     cd "$Fullname"  
     $GitRemote = git remote -v 
     $Origin = (($GitRemote -replace 'http://188.246.230.114:54580[\D]{1,99}','') -replace '[\s]{1}')[0]
-    $URL = (($GitRemote -replace 'origin','') -split ' ' )[0]
+    $URL = (($GitRemote -replace 'origin','') -split ' ')[0]
     $URL = $URL -replace 'http://188.246.230.114:54580','https://gitlab.vercloud.ru'
     $URL = $URL -replace '[\s]{1,99}',''
     git remote set-url $Origin $URL
