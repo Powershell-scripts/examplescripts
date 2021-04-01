@@ -9,7 +9,6 @@ if ($null -eq $FindLibrary) {
     New-Item -Path $DirShare -ItemType directory -name $NameLibrary
     }
 
-
 # Забираем и разбираем данные из CSV 
 $AllData = Import-Csv -Delimiter "," -Path "$FileCSV" -Header Dir,PodDir,Users,Other,Groups
 $Users = $AllData | select Users,Groups 
