@@ -1,0 +1,95 @@
+# Собираем данные о наличии сертификатов
+$Fullnames = (Get-ChildItem -Path "P:\Clients\Asia\ЗК\cert_26_06_20" -Filter "sign.*" -Recurse).FullName
+$CertOrganisation = "Золотая Корона"
+
+# Собираем данные с помощью certutils 
+$CertZKInfo = foreach ($Fullname in $Fullnames) 
+{
+    $data = certutil.exe -dump $Fullname
+    
+    # Берем соответствия данных 
+    $NotBefore = $data -match  'NotBefore: [0-9.:]{10,15}'
+    $NotAfter = $data -match  'NotAfter: [0-9.:]{10,15}'
+    $SubjectCN = $data -match 'CN=Atamirzaev Muzaffar Bakhtijarovich'
+    $SubjectOU = $data -match 'OU='
+    $SubjectO = $data -match 'O='
+    $SubjectL = $data -match 'L='
+    $SubjectSN = $data -match 'Серийный номер: '
+    $Array = [PSCustomObject]@{
+        
+        # Поскольку все данные находятся в массиве - забираем нужные нам
+        CertRelise = $CertOrganisation
+        WhoUsed = $SubjectOU[0]
+        DateCreate = $NotBefore[0]
+        DateEnd = $NotAfter[0]
+        SerialNumber = $SubjectSN[0]
+        CertName = $SubjectCN[0]
+        CertOrganisation = $replaceO[1]
+        CertCity = $SubjectL[0]
+    }
+    $Array
+}
+
+# Делаем то же самое что и с первым вариантом 
+$Fullnames = (Get-ChildItem -Path "P:\Clients\Asia\Cert Город\" -Filter "sign.*" -Recurse).FullName
+$CertOrganisation = "Город"
+$CertСityInfo = foreach ($Fullname in $Fullnames) 
+{
+    $data = certutil.exe -dump $Fullname
+    $NotBefore = $data -match  'NotBefore: [0-9.:]{10,15}'
+    $NotAfter = $data -match  'NotAfter: [0-9.:]{10,15}'
+    $SubjectCN = $data -match 'CN=Atamirzaev Muzaffar Bakhtijarovich'
+    $SubjectOU = $data -match 'OU='
+    $SubjectO = $data -match 'O='
+    $SubjectL = $data -match 'L='
+    $SubjectSN = $data -match 'Серийный номер: '
+    $Array = [PSCustomObject]@{
+        CertRelise = $CertOrganisation
+        WhoUsed = $SubjectOU[0]
+        DateCreate = $NotBefore[0]
+        DateEnd = $NotAfter[0]
+        SerialNumber = $SubjectSN[0]
+        CertName = $SubjectCN[0]
+        CertOrganisation = $replaceO[1]
+        CertCity = $SubjectL[0]
+    }
+    $Array
+}
+
+
+# Формируем цветовую гамму HTML 
+$head = @'
+<style>
+body { background-color:#dddddd;
+           font-family:Tahoma;
+	   font-size:12pt; }
+td, th { border:1px solid black;
+           border-collapse:collapse; }
+th { color:white;
+           background-color:black; }
+           table, tr, td, th { padding: 2px; margin: 0px }
+table { margin-left:50px; }
+</style>
+'@
+
+# Переводим фильтрованные данные в новую переменную 
+$HTMLs = $CertZKInfo | where {$_.whoused -ne $null}
+$Set = foreach ($HTML in $HTMLs) {
+    # настраиваем имена и заголовки 
+    $Name = $HTML.WhoUsed
+    $Organisation = $HTML.CertRelise
+    $HTML | ConvertTo-Html -As LIST -Fragment –PreContent "<h2> $Name</h2>" | Out-String
+    } 
+
+# Формируем заголовок и наименование файла, импортируем в html
+$Title = "Количество сертификатов " + $Set.Count
+ConvertTo-HTML -head $head -PostContent $Set -PreContent "<h1>Сертификаты $Organisation <p>$Title </p> </h1>" | out-file -FilePath P:\Clients\Asia\ЗК\ZKCert.html
+
+$HTMLs = $CertСityInfo
+$Set = foreach ($HTML in $HTMLs) {
+    $Name = $HTML.WhoUsed
+    $Organisation = $HTML.CertRelise
+    $HTML | ConvertTo-Html -As LIST -Fragment –PreContent "<h2> $Name</h2>" | Out-String
+    } 
+$Title = "Количество сертификатов " + $Set.Count
+ConvertTo-HTML -head $head -PostContent $Set -PreContent "<h1>Сертификаты $Organisation <p>$Title </p></h1>" | out-file -FilePath P:\Clients\Asia\ЗК\ZKCert.html -Append
